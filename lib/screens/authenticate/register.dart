@@ -1,17 +1,17 @@
 import 'package:coffee_list/services/auth.dart';
 import 'package:flutter/material.dart';
 
-class SignIn extends StatefulWidget {
+class Register extends StatefulWidget {
 
   final Function toggleView;
 
-  SignIn({ this.toggleView });
+  Register({ this.toggleView });
 
   @override
-  _SignInState createState() => _SignInState();
+  _RegisterState createState() => _RegisterState();
 }
 
-class _SignInState extends State<SignIn> {
+class _RegisterState extends State<Register> {
 
   final AuthService _auth = AuthService();
   final _formkey = GlobalKey<FormState>();
@@ -28,11 +28,11 @@ class _SignInState extends State<SignIn> {
       appBar: AppBar(
         backgroundColor: Colors.brown[400],
         elevation: 0.0,
-        title: Text('Sign in'),
+        title: Text('Sign up'),
         actions: <Widget>[
           FlatButton.icon(
             icon: Icon(Icons.person),
-            label: Text('Register'),
+            label: Text('Sign in'),
             onPressed: () {
               widget.toggleView();
             },
@@ -87,16 +87,16 @@ class _SignInState extends State<SignIn> {
                     strokeWidth: 2,
                   ),
                 ) : Text(
-                  'Sign in',
+                  'Register',
                   style: TextStyle(color: Colors.white),
                 ),
                 onPressed: () async {
                   if (_formkey.currentState.validate()) {
                     setState(() => loading = true);
-                    dynamic result = await _auth.signIn(email, password);
+                    dynamic result = await _auth.registerWithEmailAndPassword(email, password);
                     setState(() => loading = false);
                     if (result == null) {
-                      setState(() => error = 'Could not sign in with those credentials');
+                      setState(() => error = 'Please supply a valid email and password');
                     }
                   }
                 },
