@@ -15,11 +15,24 @@ class _SignInState extends State<SignIn> {
 
   final AuthService _auth = AuthService();
   final _formkey = GlobalKey<FormState>();
+  final FocusNode _emailFocus = FocusNode();
+  final FocusNode _passwordFocus = FocusNode();
 
   String email = '';
   String password = '';
   String error = '';
   bool loading = false;
+
+  Future handleSubmit() async {
+    if (_formkey.currentState.validate()) {
+      setState(() => loading = true);
+      dynamic result = await _auth.signIn(email, password);
+      setState(() => loading = false);
+      if (result == null) {
+        setState(() => error = 'Could not sign in with those credentials');
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,8 +61,28 @@ class _SignInState extends State<SignIn> {
               SizedBox(height: 20.0),
               TextFormField(
                 decoration: InputDecoration(
-                  labelText: 'Email'
+                  hintText: 'Email',
+                  fillColor: Colors.white,
+                  filled: true,
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.white, width: 2.0)
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.brown[400], width: 2.0)
+                  ),
+                  errorBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.red, width: 2.0)
+                  ),
+                  focusedErrorBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.red, width: 2.0)
+                  )
                 ),
+                textInputAction: TextInputAction.next,
+                focusNode: _emailFocus,
+                onFieldSubmitted: (term) {
+                  _emailFocus.unfocus();
+                  FocusScope.of(context).requestFocus(_passwordFocus);
+                },
                 validator: (val) {
                   if (val.isEmpty) {
                     return 'The email can not be empty';
@@ -63,8 +96,23 @@ class _SignInState extends State<SignIn> {
               SizedBox(height: 20.0),
               TextFormField(
                 decoration: InputDecoration(
-                  labelText: 'Password'
+                  hintText: 'Password',
+                  fillColor: Colors.white,
+                  filled: true,
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.white, width: 2.0)
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.brown[400], width: 2.0)
+                  ),
+                  errorBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.red, width: 2.0)
+                  ),
+                  focusedErrorBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.red, width: 2.0)
+                  )
                 ),
+                focusNode: _passwordFocus,
                 validator: (val) {
                   if (val.length < 6) {
                     return 'Enter a password with six or more characters long';
@@ -74,6 +122,9 @@ class _SignInState extends State<SignIn> {
                 obscureText: true,
                 onChanged: (val) {
                   setState(() => password = val);
+                },
+                onFieldSubmitted: (term) {
+                  handleSubmit();
                 },
               ),
               SizedBox(height: 20.0),
@@ -90,16 +141,7 @@ class _SignInState extends State<SignIn> {
                   'Sign in',
                   style: TextStyle(color: Colors.white),
                 ),
-                onPressed: () async {
-                  if (_formkey.currentState.validate()) {
-                    setState(() => loading = true);
-                    dynamic result = await _auth.signIn(email, password);
-                    setState(() => loading = false);
-                    if (result == null) {
-                      setState(() => error = 'Could not sign in with those credentials');
-                    }
-                  }
-                },
+                onPressed: handleSubmit,
               ),
               SizedBox(height: 20.0),
               Text(
