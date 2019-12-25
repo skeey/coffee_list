@@ -1,4 +1,4 @@
-import 'package:coffee_list/screens/authenticate/register.dart';
+import 'package:coffee_list/screens/authenticate/sign_up.dart';
 import 'package:coffee_list/screens/authenticate/sign_in.dart';
 import 'package:flutter/material.dart';
 
@@ -20,7 +20,7 @@ class _AuthenticateState extends State<Authenticate> {
     if (showSignIn) {
       return SignIn(toggleView: toggleView);
     }else{
-      return Register(toggleView: toggleView);
+      return SignUp(toggleView: toggleView);
     }
   }
 }

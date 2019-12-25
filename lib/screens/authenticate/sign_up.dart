@@ -1,17 +1,17 @@
 import 'package:coffee_list/services/auth.dart';
 import 'package:flutter/material.dart';
 
-class Register extends StatefulWidget {
+class SignUp extends StatefulWidget {
 
   final Function toggleView;
 
-  Register({ this.toggleView });
+  SignUp({ this.toggleView });
 
   @override
-  _RegisterState createState() => _RegisterState();
+  _SignUpState createState() => _SignUpState();
 }
 
-class _RegisterState extends State<Register> {
+class _SignUpState extends State<SignUp> {
 
   final AuthService _auth = AuthService();
   final _formkey = GlobalKey<FormState>();
@@ -138,7 +138,7 @@ class _RegisterState extends State<Register> {
                     strokeWidth: 2,
                   ),
                 ) : Text(
-                  'Register',
+                  'Sign up',
                   style: TextStyle(color: Colors.white),
                 ),
                 onPressed: handleSubmit,
