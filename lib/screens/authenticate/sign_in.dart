@@ -27,8 +27,8 @@ class _SignInState extends State<SignIn> {
     if (_formkey.currentState.validate()) {
       setState(() => loading = true);
       dynamic result = await _auth.signIn(email, password);
-      setState(() => loading = false);
       if (result == null) {
+        setState(() => loading = false);
         setState(() => error = 'Could not sign in with those credentials');
       }
     }
