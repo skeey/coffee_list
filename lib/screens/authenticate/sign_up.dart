@@ -15,9 +15,11 @@ class _SignUpState extends State<SignUp> {
 
   final AuthService _auth = AuthService();
   final _formkey = GlobalKey<FormState>();
+  final FocusNode _nameFocus = FocusNode();
   final FocusNode _emailFocus = FocusNode();
   final FocusNode _passwordFocus = FocusNode();
 
+  String name = '';
   String email = '';
   String password = '';
   String error = '';
@@ -26,10 +28,10 @@ class _SignUpState extends State<SignUp> {
   Future handleSubmit() async {
     if (_formkey.currentState.validate()) {
       setState(() => loading = true);
-      dynamic result = await _auth.registerWithEmailAndPassword(email, password);
-      setState(() => loading = false);
-      if (result == null) {
-        setState(() => error = 'Please supply a valid email and password');
+      dynamic result = await _auth.registerWithEmailAndPassword(name, email, password);
+      if(this.mounted && result == null){
+        setState(() => loading = false);
+        setState(() => error = 'Please supply a valid name, email and password');
       }
     }
   }
@@ -58,6 +60,41 @@ class _SignUpState extends State<SignUp> {
           key: _formkey,
           child: Column(
             children: <Widget>[
+              SizedBox(height: 20.0),
+              TextFormField(
+                decoration: InputDecoration(
+                  hintText: 'Name',
+                  fillColor: Colors.white,
+                  filled: true,
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.white, width: 2.0)
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.brown[400], width: 2.0)
+                  ),
+                  errorBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.red, width: 2.0)
+                  ),
+                  focusedErrorBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.red, width: 2.0)
+                  )
+                ),
+                textInputAction: TextInputAction.next,
+                focusNode: _nameFocus,
+                onFieldSubmitted: (term) {
+                  _nameFocus.unfocus();
+                  FocusScope.of(context).requestFocus(_emailFocus);
+                },
+                validator: (val) {
+                  if (val.isEmpty) {
+                    return 'The name can not be empty';
+                  }
+                  return null;
+                },
+                onChanged: (val) {
+                  setState(() => name = val);
+                },
+              ),
               SizedBox(height: 20.0),
               TextFormField(
                 decoration: InputDecoration(
